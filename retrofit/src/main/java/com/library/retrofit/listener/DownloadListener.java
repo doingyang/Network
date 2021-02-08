@@ -1,16 +1,14 @@
 package com.library.retrofit.listener;
 
-/**
- */
-public abstract class DownloadFileListener<T> {
+public abstract class DownloadListener<T> {
+
     /**
      * 单个下载成功后回调
-     *
-     * @param t
      */
     public abstract void onNext(T t);
 
-    public void onStart(){};
+    public void onStart() {
+    }
 
     /**
      * 批量下载完成

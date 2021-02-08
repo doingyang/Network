@@ -1,19 +1,17 @@
 package com.library.retrofit.subscriber;
 
-import com.library.retrofit.download.DownloadInfo;
-import com.library.retrofit.download.DownloadManager;
-import com.library.retrofit.listener.DownloadFileListener;
+import com.library.retrofit.bean.DownloadInfo;
+import com.library.retrofit.manager.DownloadManager;
+import com.library.retrofit.listener.DownloadListener;
 import com.library.retrofit.listener.TransformProgressListener;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-/**
- */
 public class DownloadSubscriber<T> extends Subscriber<T> implements TransformProgressListener {
 
-    private DownloadFileListener downloadListener;
+    private DownloadListener downloadListener;
     private DownloadInfo downloadInfo;
 
     public DownloadSubscriber(DownloadInfo downloadInfo) {

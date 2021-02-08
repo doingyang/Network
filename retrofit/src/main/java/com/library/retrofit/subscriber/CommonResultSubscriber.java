@@ -13,8 +13,6 @@ import java.lang.reflect.Type;
 import okhttp3.ResponseBody;
 import rx.Subscriber;
 
-/**
- */
 public class CommonResultSubscriber<T extends ResponseBody> extends Subscriber<T> {
 
     public static final String TAG = "CommonResultSubscriber";
@@ -28,9 +26,6 @@ public class CommonResultSubscriber<T extends ResponseBody> extends Subscriber<T
 
     /**
      * 不带加载框回调
-     *
-     * @param mContext
-     * @param callback
      */
     public CommonResultSubscriber(Context mContext, HttpCallback callback) {
         this.mContext = mContext;
@@ -39,10 +34,6 @@ public class CommonResultSubscriber<T extends ResponseBody> extends Subscriber<T
 
     /**
      * 带加载框回调
-     *
-     * @param mContext
-     * @param callback
-     * @param loadingMsg
      */
     public CommonResultSubscriber(Context mContext, HttpCallback callback, String loadingMsg) {
         this.mContext = mContext;

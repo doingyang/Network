@@ -16,14 +16,12 @@ import java.lang.reflect.Type;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-import okhttp3.internal.annotations.EverythingIsNonNull;
 
 /**
  * 请求结果数据回调统一处理
  */
 public abstract class HttpCallback<T> implements Callback {
 
-    @EverythingIsNonNull
     @Override
     public void onResponse(Call call, Response response) throws IOException {
         if (response.isSuccessful() && null != response.body()) {
@@ -46,7 +44,6 @@ public abstract class HttpCallback<T> implements Callback {
         }
     }
 
-    @EverythingIsNonNull
     @Override
     public void onFailure(Call call, IOException e) {
         onFailure(-1, e.getMessage());

@@ -1,25 +1,25 @@
-package com.library.retrofit.upload;
+package com.library.retrofit.bean;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 文件上传包装类
+ * 文件上传类
  */
-public class FileUploadEntity {
+public class UploadEntity {
 
     private long size = 0;
     private String url;
     private List<File> files = new ArrayList<>();
 
-    public FileUploadEntity(String url, File file) {
+    public UploadEntity(String url, File file) {
         this.url = url;
         this.files.add(file);
         initSize();
     }
 
-    public FileUploadEntity(String url, List<File> files) {
+    public UploadEntity(String url, List<File> files) {
         this.url = url;
         this.files = files;
         initSize();

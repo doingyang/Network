@@ -1,6 +1,6 @@
-package com.library.retrofit.download;
+package com.library.retrofit.bean;
 
-import com.library.retrofit.listener.DownloadFileListener;
+import com.library.retrofit.listener.DownloadListener;
 import com.library.retrofit.request.CommonRequest;
 
 public class DownloadInfo {
@@ -24,7 +24,7 @@ public class DownloadInfo {
 
     private String url;
 
-    private DownloadFileListener listener;
+    private DownloadListener listener;
     private CommonRequest request;
 
     public DownloadInfo(String url, String savePath) {
@@ -80,11 +80,11 @@ public class DownloadInfo {
         this.url = url;
     }
 
-    public DownloadFileListener getListener() {
+    public DownloadListener getListener() {
         return listener;
     }
 
-    public void setListener(DownloadFileListener listener) {
+    public void setListener(DownloadListener listener) {
         this.listener = listener;
     }
 

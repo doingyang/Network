@@ -1,6 +1,6 @@
-package com.library.retrofit.download;
+package com.library.retrofit.manager;
 
-import com.library.retrofit.HttpManager;
+import com.library.retrofit.bean.DownloadInfo;
 import com.library.retrofit.interceptor.DownloadInterceptor;
 import com.library.retrofit.request.CommonRequest;
 import com.library.retrofit.subscriber.DownloadSubscriber;
@@ -225,5 +225,4 @@ public class DownloadManager {
             randomAccessFile.close();
         }
     }
-
 }

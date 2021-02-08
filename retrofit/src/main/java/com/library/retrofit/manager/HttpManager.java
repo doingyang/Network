@@ -1,17 +1,17 @@
 
-package com.library.retrofit;
+package com.library.retrofit.manager;
 
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.library.retrofit.RetrofitClient;
 import com.library.retrofit.callback.FileResponse;
 import com.library.retrofit.callback.HttpCallback;
-import com.library.retrofit.download.DownloadInfo;
-import com.library.retrofit.download.DownloadManager;
+import com.library.retrofit.bean.DownloadInfo;
 import com.library.retrofit.interceptor.OffLineIntercept;
 import com.library.retrofit.interceptor.UploadInterceptor;
-import com.library.retrofit.listener.DownloadFileListener;
+import com.library.retrofit.listener.DownloadListener;
 
 import java.io.File;
 import java.util.HashMap;
@@ -20,10 +20,8 @@ import java.util.Map;
 
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 
-/**
- * Created by jady on 2016/12/6.
- */
 public class HttpManager {
+
     public static Context mContext;
     private volatile static HttpManager httpManager;
     private static int HANDER_DELAYED_TIME = 500;
@@ -93,9 +91,6 @@ public class HttpManager {
 
     /**
      * 给Retrofit添加拦截器，设置链接前缀
-     *
-     * @param baseUrl
-     * @return
      */
     public static RetrofitClient.Builder getRetrofitBuilder(String baseUrl) {
         RetrofitClient.Builder builder = new RetrofitClient.Builder()
@@ -144,8 +139,6 @@ public class HttpManager {
 
     /**
      * 初始化头部信息，添加一些共同的请求头参数
-     *
-     * @return
      */
     public static void addTmpHeaders(Map<String, String> headers) {
         tmpHeaders = headers;
@@ -161,8 +154,6 @@ public class HttpManager {
 
     /**
      * 设置共同URL前缀
-     *
-     * @param baseUrl
      */
     public static void setBaseUrl(String baseUrl) {
         HttpManager.baseUrl = baseUrl;
@@ -185,10 +176,6 @@ public class HttpManager {
 
     /**
      * 同步Get
-     *
-     * @param url
-     * @param parameters
-     * @param callback
      */
     public static void syncGet(String url, Map<String, Object> parameters, HttpCallback callback) {
         getRetrofitBuilder(baseUrl).build().syncGet(mContext, url, parameters, callback);
@@ -271,10 +258,6 @@ public class HttpManager {
 
     /**
      * 同步Post
-     *
-     * @param url
-     * @param parameters
-     * @param callback
      */
     public static void syncPost(String url, Map<String, Object> parameters, HttpCallback callback) {
         getRetrofitBuilder(baseUrl).build().syncPost(mContext, url, parameters, callback);
@@ -282,11 +265,6 @@ public class HttpManager {
 
     /**
      * 注意，此方法传到服务器的是一个json串
-     *
-     * @param url
-     * @param body
-     * @param callback
-     * @param <T>
      */
     public static <T> void postByBody(String url, T body, HttpCallback callback) {
         getRetrofitBuilder(baseUrl).build().postByBody(mContext, url, body, callback);
@@ -306,9 +284,9 @@ public class HttpManager {
     /**
      * 上传文件
      *
-     * @param url       文件上传相对地址
-     * @param filePath  本地文件路径
-     * @param fileDes   文件描述
+     * @param url                文件上传相对地址
+     * @param filePath           本地文件路径
+     * @param fileDes            文件描述
      * @param fileResponseResult 回调
      */
     public static void uploadFile(String url, String filePath, String fileDes, FileResponse fileResponseResult) {
@@ -318,9 +296,9 @@ public class HttpManager {
     /**
      * 上传文件
      *
-     * @param fullUrl   文件上传绝对地址
-     * @param filePath  本地文件路径
-     * @param fileDes   文件描述
+     * @param fullUrl            文件上传绝对地址
+     * @param filePath           本地文件路径
+     * @param fileDes            文件描述
      * @param fileResponseResult 回调
      */
     public static void uploadFileFullPath(String fullUrl, String filePath, String fileDes, FileResponse fileResponseResult) {
@@ -328,44 +306,6 @@ public class HttpManager {
     }
 
     private static void uploadFile(String url, String filePath, String fileDes, boolean useFullUrl, final FileResponse fileResponseResult) {
-//        final Handler handler = new Handler(Looper.getMainLooper()) {
-//            @Override
-//            public void handleMessage(Message msg) {
-//                super.handleMessage(msg);
-//                if (msg.what == 1000) {
-//                    iProgress.onProgress(msg.arg1, msg.arg2, msg.arg1 >= msg.arg2);
-//                } else {
-//                    if (msg.obj != null && (msg.obj instanceof String)) {
-//                        iProgress.onFailed((String) msg.obj);
-//                    }
-//                }
-//            }
-//        };
-//
-//        FileResponseResult fileResponseResult = new FileResponseResult() {
-//            @Override
-//            public void onExecuting(long progress, long total, boolean done) {
-//                Message message = new Message();
-//                message.what = 1000;
-//                message.arg1 = (int) progress;
-//                message.arg2 = (int) total;
-//                handler.sendMessageDelayed(message, HANDER_DELAYED_TIME);
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable throwable, String content) {
-//                Message message = new Message();
-//                message.what = 1001;
-//                message.obj = content;
-//                handler.sendMessageDelayed(message, HANDER_DELAYED_TIME);
-//            }
-//
-//            @Override
-//            public void onSuccess(Object o) {
-//                iProgress.onProgress(100, 100, true);
-//            }
-//        };
-
         getRetrofitBuilder(baseUrl)
                 .addUploadFileInterceptor(UploadInterceptor.create())
                 .build()
@@ -375,9 +315,9 @@ public class HttpManager {
     /**
      * 上传文件
      *
-     * @param url          文件上传相对地址
-     * @param filePathList 本地文件路径
-     * @param fileResponseResult    回调
+     * @param url                文件上传相对地址
+     * @param filePathList       本地文件路径
+     * @param fileResponseResult 回调
      */
     public static void uploadFiles(String url, List<String> filePathList, FileResponse fileResponseResult) {
         uploadFiles(url, filePathList, false, fileResponseResult);
@@ -386,50 +326,22 @@ public class HttpManager {
     /**
      * 上传文件
      *
-     * @param fullUrl      文件上传绝对地址
-     * @param filePathList 本地文件路径
-     * @param fileResponseResult    回调
+     * @param fullUrl            文件上传绝对地址
+     * @param filePathList       本地文件路径
+     * @param fileResponseResult 回调
      */
     public static void uploadFilesFullPath(String fullUrl, List<String> filePathList, FileResponse fileResponseResult) {
         uploadFiles(fullUrl, filePathList, true, fileResponseResult);
     }
 
     private static void uploadFiles(String url, List<String> filePathList, boolean useFullUrl, final FileResponse fileResponseResult) {
-//        final Handler handler = new Handler(Looper.getMainLooper()) {
-//            @Override
-//            public void handleMessage(Message msg) {
-//                super.handleMessage(msg);
-//                iProgress.onProgress(msg.arg1, msg.arg2, msg.arg1 >= msg.arg2);
-//            }
-//        };
-//
-//        FileResponseResult fileResponseResult = new FileResponseResult() {
-//            @Override
-//            public void onExecuting(long progress, long total, boolean done) {
-//                Message message = new Message();
-//                message.arg1 = (int) progress;
-//                message.arg2 = (int) total;
-//                handler.sendMessageDelayed(message, HANDER_DELAYED_TIME);
-//            }
-//
-//            @Override
-//            public void onSuccess(Object o) {
-//                iProgress.onProgress(100, 100, true);
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable throwable, String content) {
-//                iProgress.onFailed(content);
-//            }
-//        };
-
         getRetrofitBuilder(baseUrl)
                 .addUploadFileInterceptor(UploadInterceptor.create())
                 .build()
                 .uploadFiles(url, filePathList, useFullUrl, fileResponseResult);
     }
 
-    public static void download(String url, String savePath, DownloadFileListener listener) {
+    public static void download(String url, String savePath, DownloadListener listener) {
         DownloadInfo info = new DownloadInfo(url, savePath);
         info.setState(DownloadInfo.START);
         info.setListener(listener);

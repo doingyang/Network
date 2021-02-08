@@ -1,7 +1,7 @@
 package com.library.retrofit.interceptor;
 
-import com.library.retrofit.download.DownloadInfo;
-import com.library.retrofit.download.DownloadResponseBody;
+import com.library.retrofit.bean.DownloadInfo;
+import com.library.retrofit.request.DownloadResponseBody;
 import com.library.retrofit.listener.TransformProgressListener;
 
 import java.io.IOException;

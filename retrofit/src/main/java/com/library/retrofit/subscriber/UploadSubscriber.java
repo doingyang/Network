@@ -80,7 +80,7 @@ public class UploadSubscriber<T extends ResponseBody> extends Subscriber<T> {
 //        TypeAdapter<?> adapter = gson.getAdapter(callback.getGenericityType());
 //        JsonReader jsonReader = gson.newJsonReader(t.charStream());
 //        try {
-//            callback.onNext(adapter.read(jsonReader));
+//            callback.onNext(adapter.example(jsonReader));
 //        } catch (IOException e) {
 //            callback.onFailure(e, e.getMessage());
 //            e.printStackTrace();

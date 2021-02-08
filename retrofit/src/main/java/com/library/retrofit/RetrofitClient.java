@@ -12,7 +12,7 @@ import com.library.retrofit.interceptor.OffLineIntercept;
 import com.library.retrofit.interceptor.UploadInterceptor;
 import com.library.retrofit.request.CommonRequest;
 import com.library.retrofit.subscriber.CommonResultSubscriber;
-import com.library.retrofit.upload.UploadFileRequestBody;
+import com.library.retrofit.request.UploadRequestBody;
 import com.library.retrofit.subscriber.UploadSubscriber;
 
 import java.io.File;
@@ -68,7 +68,6 @@ public class RetrofitClient {
     }
 
     public static class Builder {
-
         private String baseUrl;
         private int TIME_OUT = 60;
         private boolean isLog = true;
@@ -142,7 +141,6 @@ public class RetrofitClient {
         }
 
         public void createHttpClient() {
-
             if (this.uploadFileInterceptor != null) {
                 okHttpClientBuilder.addInterceptor(this.uploadFileInterceptor);
             }
@@ -158,15 +156,14 @@ public class RetrofitClient {
             okHttpClientBuilder.connectTimeout(TIME_OUT, TimeUnit.SECONDS);
             okHttpClientBuilder.readTimeout(TIME_OUT, TimeUnit.SECONDS);
             okHttpClientBuilder.writeTimeout(TIME_OUT, TimeUnit.SECONDS);
-            if (isLog)
-                okHttpClientBuilder.addNetworkInterceptor(
-                        new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+            if (isLog) {
+                okHttpClientBuilder.addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+            }
 
             okHttpClient = okHttpClientBuilder.build();
         }
 
         public RetrofitClient build() {
-
             createHttpClient();
 
             // retrofit
@@ -294,11 +291,6 @@ public class RetrofitClient {
 
     /**
      * 回调形式
-     *
-     * @param context
-     * @param url
-     * @param parameters
-     * @param callback
      */
     public void get(Context context, String url, Map<String, Object> parameters, HttpCallback callback) {
         mContext = context;
@@ -318,11 +310,6 @@ public class RetrofitClient {
 
     /**
      * RxJava形式
-     *
-     * @param context
-     * @param url
-     * @param parameters
-     * @return
      */
     public Observable get(Context context, String url, Map<String, Object> parameters) {
         mContext = context;
@@ -386,24 +373,7 @@ public class RetrofitClient {
         }
 
         RequestBody description = RequestBody.create(MediaType.parse("multipart/form-data; charset=utf-8"), fileDes);
-
-//        UploadFileRequestBody requestBody = new UploadFileRequestBody(file, new TransformProgressListener() {
-//            private long curUploadProgress = 0;
-//
-//            @Override
-//            public void onProgress(long progress, long total, boolean completed) {
-//                if (completed) {
-//                    curUploadProgress += total;
-//                }
-//                callback.onExecuting(curUploadProgress + (progress), file.length(), curUploadProgress + (progress) == file.length());
-//            }
-//
-//            @Override
-//            public void onFailed(String msg) {
-//                callback.onFailure(null, msg);
-//            }
-//        });
-        RequestBody requestBody = UploadFileRequestBody.create(MediaType.parse("multipart/form-data"), file);
+        RequestBody requestBody = UploadRequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
         if (isFullUrl) {
             commonRequest.uploadFileFullPath(url, description, part)
@@ -437,27 +407,9 @@ public class RetrofitClient {
         HashMap<String, RequestBody> params = new HashMap<>();
         for (int i = 0; i < fileList.size(); i++) {
             File file = fileList.get(i);
-            RequestBody body =
-                    RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
-//            final long finalTotalSize = totalSize;
-//            UploadFileRequestBody body_up = new UploadFileRequestBody(file, new TransformProgressListener() {
-//
-//                @Override
-//                public void onProgress(long progress, long total, boolean completed) {
-//                    if (completed) {
-//                        curUploadProgress += total;
-//                    }
-//                    callback.onExecuting(curUploadProgress + (progress), finalTotalSize, curUploadProgress + (progress) == finalTotalSize);
-//                }
-//
-//                @Override
-//                public void onFailed(String msg) {
-//                    callback.onFailure(null, msg);
-//                }
-//            });
             params.put("file[]\"; filename=\"" + file.getName(), body);
-//            params.put("file[]\"; filename=\"" + file.getName(), body);
         }
         if (isFullUrl) {
             commonRequest.uploadFilesFullPath(url, params)
